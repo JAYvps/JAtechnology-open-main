@@ -1,0 +1,440 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 Body Problem</title>
+    <link rel="shortcut icon" href="./assets/favicon.svg">
+    <style>
+        body {
+            margin: 0;
+            background-color: #09090B;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #controls {
+            position: absolute;
+            top: 0;
+            left: -600px;
+            /* 初始隐藏在屏幕外 */
+            background: rgba(255, 255, 255, 0.05);
+            padding: 96px 24px 24px 24px;
+            z-index: 10;
+            width: 252px;
+            /* 控制面板宽度 */
+            height: 100%;
+            /* 高度占满 */
+            transition: left 0.3s;
+            /* 动画效果 */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            gap: 24px;
+        }
+
+        #controls label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            line-height: 20px;
+        }
+
+        #controls-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        #toggleControls {
+            z-index: 20;
+            /* 确保在控制面板上方 */
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            line-height: 20px;
+            margin-left: 24px;
+        }
+
+        #controls input,
+        #controls select {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .controls-item-checkbox {
+            width: auto !important;
+        }
+
+        .logo {
+            position: absolute;
+            left: 50%;
+            top: 24px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            width: 0;
+            height: 48px;
+
+        }
+
+        .logo img {
+            width: 48px;
+            height: 48px;
+        }
+
+        .asorn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 24px;
+        }
+
+        .asorn a {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            line-height: 20px;
+            text-decoration: none;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 24px;
+            width: 100%;
+            height: 48px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <canvas id="threeBodyCanvas" width="459" height="834"></canvas>
+    <div class="logo"><img src="./assets/linestar/logo.svg" alt=""></div>  
+    <div class="nav">
+        <button id="toggleControls">显示控制面板</button>
+        <button class="asorn"><a href="./blog.html" target="_blank">My Blog</a></button>
+    </div>
+
+    <div id="controls" style="left: -300px;">
+        <div id="controls-item">
+            <label for="solution">三体解：</label>
+            <select id="solution">
+                <option value="figureEight">八字形</option>
+                <option value="stableOrbit">稳定环绕</option>
+                <option value="lissajous">丽莎如曲线</option>
+                <option value="chaotic">混沌运动</option>
+                <option value="periodic">周期解</option>
+                <option value="outwardSpiral">远心轨迹</option>
+            </select>
+        </div>
+        <div id="controls-item">
+            <label for="gravity">引力常数：<span id="gValue">1</span></label>
+            <input type="range" id="gravity" min="0.1" max="10" step="0.1" value="1">
+        </div>
+        <div id="controls-item">
+            <label for="timeStep">时间步长：<span id="dtValue">0.005</span></label>
+            <input type="range" id="timeStep" min="0.001" max="0.01" step="0.001" value="0.005">
+        </div>
+        <div id="controls-item">
+            <label for="scale">缩放画布：<span id="scaleValue">200</span></label>
+            <input type="range" id="scale" min="100" max="500" step="10" value="200">
+        </div>
+        <div id="controls-item">
+            <label for="showTrail">显示轨迹：</label>
+            <!-- 默认隐藏轨迹 -->
+            <!-- <input type="checkbox" id="showTrail" class="controls-item-checkbox"> -->
+            <!-- 默认显示轨迹 -->
+            <input type="checkbox" id="showTrail" class="controls-item-checkbox" checked="">
+        </div>
+    </div>
+
+    <script>
+        // 物理常数
+        let G = 1;
+        let dt = 0.001;
+
+        // 画布和缩放设置
+        const canvas = document.getElementById('threeBodyCanvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const context = canvas.getContext('2d');
+
+        // 缩放比例
+        let scale = 200;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+
+        // 星星属性
+        const stars = [];
+        const numStars = 160; // 星星数量
+        const fadeSpeed = 0.002; // 渐隐渐现速度
+
+        // 生成星星
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 0.1 + 0.05,
+                opacity: Math.random() * 1 + 0.05 // 初始透明度
+            });
+        }
+
+        // 控制面板切换逻辑
+        let controlsVisible = false; // 控制面板是否可见
+
+        document.getElementById('toggleControls').addEventListener('click', () => {
+            const controls = document.getElementById('controls');
+            controlsVisible = !controlsVisible; // 切换状态
+
+            if (controlsVisible) {
+                controls.style.left = '0'; // 展开
+                document.getElementById('toggleControls').innerText = '隐藏控制面板';
+            } else {
+                controls.style.left = '-300px'; // 收起
+                document.getElementById('toggleControls').innerText = '显示控制面板';
+            }
+        });
+
+        // 交互控件的设置
+        document.getElementById('gravity').addEventListener('input', (e) => {
+            G = parseFloat(e.target.value);
+            document.getElementById('gValue').innerText = G;
+        });
+
+        document.getElementById('timeStep').addEventListener('input', (e) => {
+            dt = parseFloat(e.target.value);
+            document.getElementById('dtValue').innerText = dt;
+        });
+
+        document.getElementById('scale').addEventListener('input', (e) => {
+            scale = parseFloat(e.target.value);
+            document.getElementById('scaleValue').innerText = scale;
+        });
+
+        document.getElementById('solution').addEventListener('change', (e) => {
+            initializeBodies(e.target.value); // 切换轨迹时自动初始化
+            cancelAnimationFrame(animationFrameId); // 取消当前动画帧
+            animate(); // 自动开始新的轨迹动画
+        });
+
+        // Body 类定义
+        class Body {
+            constructor(x, y, vx, vy, mass, color) {
+                this.x = x;
+                this.y = y;
+                this.vx = vx;
+                this.vy = vy;
+                this.mass = mass;
+                this.color = color;
+                this.trail = []; // 轨迹记录
+            }
+
+            applyForce(fx, fy) {
+                const ax = fx / this.mass;
+                const ay = fy / this.mass;
+                this.vx += ax * dt;
+                this.vy += ay * dt;
+            }
+
+            updatePosition() {
+                this.x += this.vx * dt;
+                this.y += this.vy * dt;
+                this.trail.push({ x: this.x, y: this.y });
+                const maxTrailLength = 400; // 控制轨迹的最大长度
+                if (this.trail.length > maxTrailLength) {
+                    this.trail.shift(); // 移除最旧的轨迹
+                }
+            }
+
+            // 绘制物体及其轨迹（使用单一颜色）
+            draw(context, showTrail, trailOpacity = 0) {
+
+                // 设置阴影效果
+                if (this.mass !== 15) { // 只有当质量不为15时才应用外发光
+                    context.shadowColor = this.color; // 外发光颜色
+                    context.shadowBlur = 25; // 外发光模糊程度
+                } else {
+                    context.shadowBlur = 0; // 质量为15的物体不显示外发光
+                    context.shadowColor = 'transparent'; // 设为透明
+                }
+
+                context.globalAlpha = 1; // 确保物体本身不透明
+
+                if (showTrail) {
+                    context.beginPath();
+                    context.moveTo(centerX + this.trail[0]?.x * scale, centerY + this.trail[0]?.y * scale);
+                    this.trail.forEach(p => {
+                        context.lineTo(centerX + p.x * scale, centerY + p.y * scale);
+                    });
+                    context.strokeStyle = this.color + `40`; // 修改为所需的轨迹不透明度
+                    context.lineWidth = 1;
+                    context.stroke();
+                }
+
+                // 绘制太阳形状
+                const radius = this.mass * 0.1; // 根据质量设置半径
+                const rays = 8; // 太阳光线数量
+                const rayLength = radius * 1.1; // 光线长度
+
+                context.beginPath();
+                for (let i = 0; i < rays; i++) {
+                    const angle = (i / rays) * (Math.PI * 2); // 计算每根光线的角度
+                    const xRayEnd = centerX + this.x * scale + Math.cos(angle) * rayLength;
+                    const yRayEnd = centerY + this.y * scale + Math.sin(angle) * rayLength;
+                    
+                    // 绘制光线
+                    context.moveTo(centerX + this.x * scale, centerY + this.y * scale);
+                    context.lineTo(xRayEnd, yRayEnd);
+                }
+                context.strokeStyle = this.color; // 太阳的颜色
+                context.lineWidth = 1; // 光线的宽度
+                context.stroke();
+
+                // 绘制太阳中心
+                context.beginPath();
+                context.arc(centerX + this.x * scale, centerY + this.y * scale, radius, 0, 2 * Math.PI);
+                context.fillStyle = this.color; // 太阳的颜色
+                context.fill();
+
+                // 重置阴影效果，防止影响后续绘制
+                context.shadowBlur = 0;
+                context.shadowColor = 'transparent'; // 重置为透明
+            }
+        }
+
+        function distance(body1, body2) {
+            const dx = body2.x - body1.x;
+            const dy = body2.y - body1.y;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        function gravitationalForce(body1, body2) {
+            const dx = body2.x - body1.x;
+            const dy = body2.y - body1.y;
+            const r = distance(body1, body2);
+            const forceMagnitude = (G * body1.mass * body2.mass) / (r * r + 0.1);
+            const fx = forceMagnitude * dx / r;
+            const fy = forceMagnitude * dy / r;
+            return { fx, fy };
+        }
+
+        // 根据不同初始条件初始化三体和新增行星
+        function initializeBodies(solution) {
+            bodies = [];
+            if (solution === 'figureEight') {
+                bodies.push(new Body(-0.97000436, 0.24308753, 0.4662036850, 0.4323657300, 40, '#AFE4E4'));
+                bodies.push(new Body(0.97000436, -0.24308753, 0.4662036850, 0.4323657300, 40, '#F8D7A1'));
+                bodies.push(new Body(0, 0, -0.93240737, -0.86473146, 40, '#EBF396'));
+            } else if (solution === 'lissajous') {
+                bodies.push(new Body(0.5, 0, 0, 1.0, 40, '#AFE4E4'));
+                bodies.push(new Body(-0.5, 0, 0, -1.0, 40, '#F8D7A1'));
+                bodies.push(new Body(0, 0.5, -1.0, 0, 40, '#EBF396'));
+            } else if (solution === 'chaotic') {
+                bodies.push(new Body(-0.5, 0.3, 0.5, 0.7, 40, '#AFE4E4'));
+                bodies.push(new Body(0.5, -0.3, -0.5, -0.7, 40, '#F8D7A1'));
+                bodies.push(new Body(0, 0, 0.1, 0.1, 40, '#EBF396'));
+            } else if (solution === 'periodic') {
+                bodies.push(new Body(1, 0, 0, 1, 40, '#AFE4E4'));
+                bodies.push(new Body(0, 1, -1, 0, 40, '#F8D7A1'));
+                bodies.push(new Body(-1, 0, 0, -1, 40, '#EBF396'));
+            }else if (solution === 'stableOrbit') {
+                bodies.push(new Body(0, 0, 0, 0, 40, '#AFE4E4'));
+                bodies.push(new Body(1, 0, 0, 0, 40, '#F8D7A1'));
+                bodies.push(new Body(0, 1, 1, 0, 40, '#EBF396'));
+            } else if (solution === 'outwardSpiral') {
+                bodies.push(new Body(0, 0, 0, 0, 40, '#AFE4E4'));
+                bodies.push(new Body(0.5, 0, 0, 0, 40, '#F8D7A1'));
+                bodies.push(new Body(0.25, 0.25, 0, 0.5, 40, '#EBF396'));
+            }
+
+            // 新增行星
+            bodies.push(new Body(0, 0, 0, 0, 15, '#16A34A')); // 行星，速度0
+        }
+
+        // 初始化为八字形
+        let bodies = [];
+        initializeBodies('figureEight');
+
+        function updateForces(bodies) {
+            for (let i = 0; i < bodies.length - 1; i++) {
+                let fx = 0, fy = 0;
+                for (let j = 0; j < bodies.length - 1; j++) {
+                    if (i !== j) {
+                        const force = gravitationalForce(bodies[i], bodies[j]);
+                        fx += force.fx;
+                        fy += force.fy;
+                    }
+                }
+                bodies[i].applyForce(fx, fy);
+            }
+        }
+
+        function drawStars() {
+            stars.forEach(star => {
+                // 渐隐渐现效果
+                star.opacity += fadeSpeed; // 增加透明度
+                if (star.opacity > 1 || star.opacity < 0) {
+                    star.opacity = Math.random(); // 重新生成随机透明度
+                }
+
+                context.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                context.beginPath();
+                context.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                context.fill();
+            });
+        }
+
+        function updatePositions(bodies) {
+            for (let i = 0; i < bodies.length - 1; i++) { // 忽略最后一个行星
+                bodies[i].updatePosition();
+            }
+        }
+
+        function drawBodies(bodies, context, showTrail) {
+            const trailOpacity = 10; // 修改此值以更改轨迹不透明度
+            bodies.forEach(body => body.draw(context, showTrail));
+        }
+
+        // 动画控制逻辑
+        let animationFrameId;
+
+        function animate() {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制星星
+            drawStars();
+
+            updateForces(bodies);
+            updatePositions(bodies);
+            const showTrail = document.getElementById('showTrail').checked; // 根据按钮状态决定是否显示轨迹
+            drawBodies(bodies, context, showTrail);
+            animationFrameId = requestAnimationFrame(animate); // 无限循环动画
+        }
+
+        // 自动开始动画
+        animate();
+
+        // 窗口调整时更新画布大小
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+
+</body></html>

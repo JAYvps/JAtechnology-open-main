@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>书籍推荐</title>
+    <link rel="stylesheet" href="./books/style.min.css">
+    <link rel="shortcut icon" href="./assets/public/favicon.svg" />
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?f65882c2c20bc920cff590ff3d2098b8";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</head>
+
+<body>
+    <canvas class="fireworks"></canvas>
+    <div class="head" id="headscrollbg">
+        <div class="main">
+
+            <div class="menu" id="main-menu">
+                <li class="magical btn" onclick="window.location.href='./index.html'">首页</li>
+                <li class="magical btn" onclick="window.location.href='./blog.html'">知识</li>
+                <li class="magical btn nav" onclick="window.location.href='./Recommendations.html'">书籍</li>
+                <li class="magical btn" onclick="window.location.href='./about.html'">关于</li>
+            </div>
+            <div class="menu" id="menu-expand">
+                <li class="magical btn menu-expand-btn" id="menu-expand-child"><i class="icon menu-icon"></i></li>
+            </div>
+            <div id="menu-panel">
+                <div class="menu-panel-content" id="menu-panel-content"></div>
+                <div class="menu-close-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10.5859 12L2.79297 4.20706L4.20718 2.79285L12.0001 10.5857L19.793 2.79285L21.2072 4.20706L13.4143 12L21.2072 19.7928L19.793 21.2071L12.0001 13.4142L4.20718 21.2071L2.79297 19.7928L10.5859 12Z"></path></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="book">
+        <div class="book-list">
+            <div class="book-list-category">
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/4886100/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/s11230326.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">点石成金的艺术</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/30280401/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/s29825692.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">精通比特币 (第2版·影印版)</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/36794227/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/arithmetic.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">Hello算法</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/25859528/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/data.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">数据结构 (C++语言版·第3版)</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/36873291/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/LLM.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">解构大语言模型</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/37015972/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/linux.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">深入理解Linux进程与内存</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/35934902/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/performance.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">性能之巅（第2版）</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/37361635/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/love.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">允许爱情消失</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/36518892/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/ElonMusk.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">埃隆·马斯克传</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://read.douban.com/ebook/437411510/?dcs=subject-rec&dcm=douban&dct=36518892" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/cpu.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">芯片战争</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/26851515/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/detail.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">细节</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/20428922/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/quiz.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">学会提问</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="category-divider"></div>
+            <div class="book-list-category">
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/36460204/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/power.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">权力进化论</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/5937126/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/nerve.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">认知神经科学</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/27054340/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/goDied.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">一个叫欧维的男人决定去死</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="magical item">
+                    <a href="https://book.douban.com/subject/35929788/" target="_blank">
+                        <div class="book-item" data-cover-url="./books/static/social.jpg">
+                            <div class="b-wrapper b-page b-back"></div>
+                            <div class="b-wrapper b-page b-four"></div>
+                            <div class="b-wrapper b-page b-three"></div>
+                            <div class="b-wrapper b-page b-two"></div>
+                            <div class="b-wrapper b-page b-one"><span class="b-one-title">向上社交</span></div>
+                            <div class="b-wrapper b-front"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer-content">
+            <div class="copyright">
+                <div>© 2023 Design by <a href="https://asorn.cn/" target="_blank">Asorn</a></div>
+                <span>|</span>
+                <div class="fillings">
+                    <a href="http://beian.miit.gov.cn/" target="_blank">津ICP备18006139号-5</a>
+                </div>
+            </div>
+            <div class="friends">
+                <a href="https://zdo.fun/" target="_blank">ZDO</a>
+                <a href="https://larkmap.com/" target="_blank">Larkmap</a>
+                <a href="https://qingicon.com/" target="_blank">QingIcon</a>
+            </div>
+        </div>
+    </div>
+    <div class="widget">
+        <div class="shape-light"></div>
+        <div class="shape-star">
+            <div class="rising-stars rising-stars-visible">
+                <div style="height:1px;width:1px"></div>
+                <div style="height:2px;width:2px"></div>
+                <div style="height:1px;width:1px"></div>
+            </div>
+        </div>
+        <div class="shape-earth"></div>
+    </div>
+    <div class="widget-top"></div>
+</body>
+<script src="./books/main.min.js"></script>
+<script src='./books/anime.js'></script>
+<script src='./books/firework.js'></script>
+
+</html>
